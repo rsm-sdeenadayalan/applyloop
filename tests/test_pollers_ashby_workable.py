@@ -1,3 +1,5 @@
+from datetime import UTC
+
 import httpx
 import respx
 
@@ -12,7 +14,7 @@ ASHBY_PAYLOAD = {
             "location": "Remote",
             "jobUrl": "https://jobs.ashbyhq.com/acme/b1e2",
             "descriptionHtml": "<p>Own dbt models</p>",
-            "publishedAt": "2026-07-19T00:00:00.000Z",
+            "publishedAt": "2026-07-19T05:00:00+05:00",
             "isListed": True,
         },
         {"id": "hidden", "title": "Ghost", "jobUrl": "x", "isListed": False},
@@ -44,6 +46,8 @@ def test_fetch_ashby_filters_unlisted():
     p = postings[0]
     assert p.external_id == "b1e2"
     assert p.description_text == "Own dbt models"
+    assert p.posted_at.tzinfo == UTC
+    assert p.posted_at.hour == 0
 
 
 @respx.mock
@@ -56,3 +60,4 @@ def test_fetch_workable():
     assert p.external_id == "AB12"
     assert p.location == "Austin, United States"
     assert p.description_text == "Build pipelines"
+    assert postings[0].posted_at.tzinfo == UTC
