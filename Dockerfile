@@ -4,5 +4,4 @@ WORKDIR /app
 COPY pyproject.toml README.md ./
 COPY applyloop ./applyloop
 RUN uv pip install --system .
-COPY config ./config
 CMD ["applyloop-web"]
