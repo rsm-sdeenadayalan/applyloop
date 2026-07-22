@@ -7,6 +7,16 @@ one-tap approval, submits, and tracks everything.
 
 **Status:** Milestone 1 (discover + score + feed) under construction.
 
+## Quickstart
+
+1. `cp .env.example .env` and fill in `ANTHROPIC_API_KEY`.
+2. `cp config/profile.yaml.example config/profile.yaml` (repeat for
+   `preferences.yaml`, `companies.yaml`) and edit with your details.
+3. `docker compose up --build` — dashboard at http://localhost:8000.
+
+Local dev without Docker: `uv sync`, then `uv run applyloop-worker` in one
+terminal and `uv run applyloop-web` in another (uses SQLite by default).
+
 ## Honest constraints
 
 - Auto-submission can conflict with some job sites' terms of service, and bot
