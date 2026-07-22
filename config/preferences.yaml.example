@@ -1,0 +1,9 @@
+# Copy to preferences.yaml. Used to gate and score jobs.
+titles: [Data Scientist, Machine Learning Engineer, Analytics Engineer]
+seniority: [entry, mid]            # entry | mid | senior | staff
+locations: [United States, Remote]
+remote_ok: true
+salary_floor_usd: 110000
+dealbreakers:
+  - security clearance required
+search_terms: [data scientist, machine learning engineer]

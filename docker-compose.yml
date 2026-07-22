@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: applyloop
+      POSTGRES_PASSWORD: applyloop
+      POSTGRES_DB: applyloop
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U applyloop"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  web:
+    build: .
+    command: applyloop-web
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://applyloop:applyloop@db:5432/applyloop
+      CONFIG_DIR: /app/config
+    env_file:
+      - path: .env
+        required: false
+    ports: ["127.0.0.1:8000:8000"]
+    volumes: ["./config:/app/config:ro"]
+    depends_on:
+      db: { condition: service_healthy }
+
+  worker:
+    build: .
+    command: applyloop-worker
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg://applyloop:applyloop@db:5432/applyloop
+      CONFIG_DIR: /app/config
+    env_file:
+      - path: .env
+        required: false
+    volumes: ["./config:/app/config:ro"]
+    depends_on:
+      db: { condition: service_healthy }
+
+volumes:
+  pgdata:
