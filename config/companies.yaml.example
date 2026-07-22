@@ -1,0 +1,10 @@
+# Copy to companies.yaml and edit. token = the company's board slug in its ATS URL,
+# e.g. https://boards.greenhouse.io/<token>, https://jobs.lever.co/<token>,
+# https://jobs.ashbyhq.com/<token>, https://apply.workable.com/<token>
+companies:
+  - name: Example Corp
+    ats: greenhouse
+    token: examplecorp
+  - name: Sample Startup
+    ats: lever
+    token: samplestartup

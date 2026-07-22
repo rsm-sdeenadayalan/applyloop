@@ -1,0 +1,26 @@
+# Copy to profile.yaml. This is your master résumé as data. The tailor may
+# reorder/rephrase but never invent anything not present here.
+name: Jane Doe
+email: jane@example.com
+phone: "+1 555 000 0000"
+location: San Francisco, CA
+links:
+  - https://github.com/janedoe
+  - https://linkedin.com/in/janedoe
+work_authorization: US citizen            # or: needs H-1B sponsorship, F-1 OPT, etc.
+summary: >
+  Data scientist with 3 years of experience in ML pipelines and analytics.
+experience:
+  - company: Acme Analytics
+    title: Data Scientist
+    start: 2023-07
+    end: present
+    location: Remote
+    bullets:
+      - Built churn prediction model (XGBoost) reducing churn 12%
+      - Deployed feature pipelines on Airflow + dbt serving 40 models
+education:
+  - school: UC San Diego
+    degree: MS Business Analytics
+    year: 2023
+skills: [python, sql, pytorch, airflow, dbt, aws]
