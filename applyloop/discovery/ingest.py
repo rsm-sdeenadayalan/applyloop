@@ -15,7 +15,7 @@ def content_hash(company_name: str, title: str, location: str) -> str:
 
 def ingest_postings(session: Session, company: Company, postings: list[JobPosting]) -> int:
     existing = set(
-        session.scalars(select(Job.content_hash).where(Job.company_id == company.id))
+        session.scalars(select(Job.content_hash))
     )
     new_count = 0
     for p in postings:

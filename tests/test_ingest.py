@@ -40,3 +40,14 @@ def test_sync_companies_upserts():
     second = sync_companies(session, entries)
     assert len(first) == len(second) == 1
     assert session.query(Company).count() == 1
+
+
+def test_ingest_skips_cross_company_duplicate():
+    session = make_session()
+    a = Company(name="Acme", ats_type="greenhouse", board_token="acme")
+    b = Company(name="ACME", ats_type="lever", board_token="acme2")
+    session.add_all([a, b])
+    session.commit()
+    assert ingest_postings(session, a, [_posting()]) == 1
+    assert ingest_postings(session, b, [_posting()]) == 0
+    assert session.query(Job).count() == 1
