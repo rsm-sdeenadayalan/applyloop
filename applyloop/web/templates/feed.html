@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="get">
+  Min score: <input type="number" name="min_score" value="{{ min_score }}" min="0" max="100">
+  <button type="submit">Filter</button>
+</form>
+<table>
+  <tr><th>Score</th><th>Title</th><th>Company</th><th>Location</th><th>Why</th></tr>
+  {% for job in jobs %}
+  <tr>
+    <td class="score">{{ job.score }}</td>
+    <td><a href="{{ job.url }}" target="_blank" rel="noopener">{{ job.title }}</a></td>
+    <td>{{ job.company.name }}</td>
+    <td>{{ job.location }}</td>
+    <td class="rationale">{{ job.score_rationale }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
