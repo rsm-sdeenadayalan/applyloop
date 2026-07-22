@@ -10,7 +10,7 @@
 
 ## Global Constraints
 
-- License MIT; every dependency must be MIT/Apache-2.0/BSD/PSF licensed.
+- License MIT; dependencies must be permissively licensed (MIT/Apache-2.0/BSD/PSF) or weak-copyleft (LGPL/MPL, e.g. psycopg, certifi) used unmodified as installed packages. No GPL/AGPL dependencies.
 - No personal data in the repo: `config/*.yaml`, `.env`, `*.pdf`, `*.db` are gitignored; only `*.example` templates are committed.
 - No code copied from other job-application projects (AIHawk, ApplyPilot, etc.).
 - Python ≥3.12. Line length 100 (ruff). All timestamps stored UTC.
