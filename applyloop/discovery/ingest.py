@@ -19,6 +19,17 @@ def ingest_postings(session: Session, company: Company, postings: list[JobPostin
     )
     new_count = 0
     for p in postings:
+        # Validate URL to prevent XSS via javascript: or other non-http(s) schemes
+        if not p.url.startswith(("http://", "https://")):
+            session.add(
+                Event(
+                    stage="discovery",
+                    level="error",
+                    message=f"{company.name}: rejected invalid url {p.url[:100]!r}",
+                )
+            )
+            continue
+
         h = content_hash(company.name, p.title, p.location)
         if h in existing:
             continue

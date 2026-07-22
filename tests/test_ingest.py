@@ -51,3 +51,17 @@ def test_ingest_skips_cross_company_duplicate():
     assert ingest_postings(session, a, [_posting()]) == 1
     assert ingest_postings(session, b, [_posting()]) == 0
     assert session.query(Job).count() == 1
+
+
+def test_ingest_rejects_non_http_url():
+    session = make_session()
+    company = Company(name="Acme", ats_type="greenhouse", board_token="acme")
+    session.add(company)
+    session.commit()
+    bad = JobPosting(
+        external_id="9", title="Evil", location="Remote",
+        url="javascript:alert(1)", description_text="x",
+    )
+    assert ingest_postings(session, company, [bad]) == 0
+    assert session.query(Job).count() == 0
+    assert session.query(Event).filter_by(level="error").count() == 1
