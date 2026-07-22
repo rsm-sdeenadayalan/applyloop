@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 
 import httpx
 
@@ -21,7 +21,13 @@ def fetch_greenhouse(client: httpx.Client, board_token: str) -> list[JobPosting]
                 location=(j.get("location") or {}).get("name", ""),
                 url=j["absolute_url"],
                 description_text=html_to_text(j.get("content", "")),
-                posted_at=datetime.fromisoformat(posted) if posted else None,
+                posted_at=(
+                    lambda dt: dt.astimezone(UTC)
+                    if dt.tzinfo is not None
+                    else dt.replace(tzinfo=UTC)
+                )(datetime.fromisoformat(posted))
+                if posted
+                else None,
             )
         )
     return postings

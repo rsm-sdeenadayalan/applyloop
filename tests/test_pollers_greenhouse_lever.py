@@ -1,3 +1,5 @@
+from datetime import UTC
+
 import httpx
 import respx
 
@@ -42,6 +44,8 @@ def test_fetch_greenhouse():
     assert p.location == "Remote - US"
     assert p.description_text == "Build models"
     assert p.posted_at is not None
+    assert p.posted_at.tzinfo == UTC
+    assert p.posted_at.hour == 16
 
 
 @respx.mock
