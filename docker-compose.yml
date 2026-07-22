@@ -16,11 +16,14 @@ services:
   web:
     build: .
     command: applyloop-web
+    restart: unless-stopped
     environment:
       DATABASE_URL: postgresql+psycopg://applyloop:applyloop@db:5432/applyloop
       CONFIG_DIR: /app/config
-    env_file: [.env]
-    ports: ["8000:8000"]
+    env_file:
+      - path: .env
+        required: false
+    ports: ["127.0.0.1:8000:8000"]
     volumes: ["./config:/app/config:ro"]
     depends_on:
       db: { condition: service_healthy }
@@ -28,10 +31,13 @@ services:
   worker:
     build: .
     command: applyloop-worker
+    restart: unless-stopped
     environment:
       DATABASE_URL: postgresql+psycopg://applyloop:applyloop@db:5432/applyloop
       CONFIG_DIR: /app/config
-    env_file: [.env]
+    env_file:
+      - path: .env
+        required: false
     volumes: ["./config:/app/config:ro"]
     depends_on:
       db: { condition: service_healthy }
