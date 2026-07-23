@@ -11,6 +11,9 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""
     config_dir: Path = Path("config")
     score_threshold: int = 70
+    llm_backend: str = "anthropic_api"
+    claude_code_binary: str = "claude"
+    claude_code_timeout: int = 180
 
 
 @lru_cache

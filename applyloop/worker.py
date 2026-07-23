@@ -13,13 +13,29 @@ from applyloop.settings import get_settings
 logger = logging.getLogger(__name__)
 
 
+def build_llm_client(settings):
+    if settings.llm_backend == "claude_code":
+        from applyloop.llm import ClaudeCodeClient
+
+        return ClaudeCodeClient(
+            binary=settings.claude_code_binary, timeout=settings.claude_code_timeout
+        )
+    if settings.llm_backend == "anthropic_api":
+        if not settings.anthropic_api_key:
+            return None
+        import anthropic
+
+        return anthropic.Anthropic(api_key=settings.anthropic_api_key)
+    raise ValueError(f"unknown LLM_BACKEND: {settings.llm_backend}")
+
+
 def pipeline_tick(session_factory, http_client, llm_client) -> tuple[int, int]:
     session = session_factory()
     try:
         new = run_discovery(session, http_client)
-        if llm_client is None or not get_settings().anthropic_api_key:
+        if llm_client is None:
             session.add(
-                Event(stage="scoring", message="skipped: no ANTHROPIC_API_KEY")
+                Event(stage="scoring", message="skipped: no LLM backend configured")
             )
             session.commit()
             return new, 0
@@ -48,11 +64,7 @@ def main() -> None:
     settings = get_settings()
     engine = make_engine(settings.database_url)
     init_db(engine)
-    llm_client = None
-    if settings.anthropic_api_key:
-        import anthropic
-
-        llm_client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
+    llm_client = build_llm_client(settings)
     build_scheduler(
         make_session_factory(engine), httpx.Client(timeout=30), llm_client
     ).start()
