@@ -2,7 +2,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import select
+from sqlalchemy import func, select
 
 from applyloop.db.models import Event, Job
 from applyloop.db.session import init_db, make_engine, make_session_factory
@@ -26,8 +26,12 @@ def create_app(session_factory) -> FastAPI:
                     .limit(200)
                 )
             )
+            total = session.scalar(select(func.count(Job.id))) or 0
+            scored = session.scalar(select(func.count(Job.id)).where(Job.status == "scored")) or 0
             return TEMPLATES.TemplateResponse(
-                request, "feed.html", {"jobs": jobs, "min_score": min_score}
+                request,
+                "feed.html",
+                {"jobs": jobs, "min_score": min_score, "total": total, "scored": scored},
             )
         finally:
             session.close()
